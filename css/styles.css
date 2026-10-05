@@ -9,6 +9,9 @@
   --sidebar: 220px;
   --rail: 42px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ink: currentColor;
+   --ink-2: #FF4FD8; 
+   --ink-3: #4FF8FF;
 }
 
 * {
@@ -118,9 +121,41 @@ ol {
   display: flex;
   flex-direction: column;
   gap: 36px;
+  isolation: isolate;
   border-right: 1px solid var(--line);
-  background: rgba(28, 28, 28, 0.92);
+  background: rgba(22, 22, 22, 0.94);
   backdrop-filter: blur(10px);
+}
+
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 70deg,
+    rgba(200, 245, 66, 0.2) 105deg,
+    transparent 145deg 205deg,
+    rgba(128, 110, 255, 0.16) 245deg,
+    transparent 285deg 330deg,
+    rgba(200, 245, 66, 0.12) 350deg,
+    transparent 360deg
+  );
+  filter: blur(42px);
+  animation: sidebarGlow 24s linear infinite;
+}
+
+.sidebar > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes sidebarGlow {
+  to {
+    transform: rotate(1turn);
+  }
 }
 
 .sidebar__block:last-child {
@@ -152,6 +187,29 @@ ol {
 
 .sidebar a:hover {
   color: var(--lime);
+}
+
+.sidebar__menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar__menu-link svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.sidebar__menu-link:hover svg {
+  transform: translateX(2px);
+  opacity: 1;
 }
 
 .sidebar__email {
@@ -226,6 +284,52 @@ section[id] {
   color: var(--lime);
 }
 
+.hero h1 .title-shine {
+  --shine-color: var(--text);
+  display: inline-block;
+  color: transparent;
+  background: linear-gradient(
+    110deg,
+    var(--shine-color) 0%,
+    var(--shine-color) 40%,
+    #fff 50%,
+    var(--shine-color) 60%,
+    var(--shine-color) 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: titleShine 3.5s linear infinite;
+}
+
+.hero h1 .lime.title-shine {
+  --shine-color: var(--lime);
+}
+
+@keyframes titleShine {
+  to {
+    background-position: 0 0;
+  }
+}
+
+.typewriter {
+  display: inline-block;
+  clip-path: inset(0 100% 0 0);
+  animation: typewriter 4s steps(10, end) 1.9s infinite;
+}
+
+@keyframes typewriter {
+  30%,
+  70% {
+    clip-path: inset(0);
+  }
+
+  100% {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
 @keyframes heroTextRise {
   from {
     opacity: 0;
@@ -278,12 +382,14 @@ section[id] {
 .stats {
   display: grid;
   gap: 28px;
+  /* align-self: end; */
   padding: 12px 0;
+  text-align: right;
 }
 
 .stats h2 {
   font-family: Anton, sans-serif;
-  font-size: clamp(48px, 6vw, 84px);
+  font-size: clamp(42px, 5vw, 72px);
   line-height: 1;
 }
 
@@ -443,13 +549,15 @@ section[id] {
   border-radius: 18px;
 }
 
-.project .placeholder {
-  min-height: 0;
+.project__image {
+  display: block;
+  width: 100%;
   aspect-ratio: 16 / 10;
+  object-fit: cover;
   transition: transform 0.7s var(--ease);
 }
 
-.project:hover .placeholder {
+.project:hover .project__image {
   transform: scale(1.03);
 }
 
@@ -611,5 +719,21 @@ section[id] {
 
   .hero h1 {
     font-size: clamp(52px, 18vw, 92px);
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar::before {
+    animation: none;
+  }
+
+  .hero h1 .title-shine {
+    animation: none;
+  }
+
+  .typewriter {
+    clip-path: none;
+    animation: none;
   }
 }
